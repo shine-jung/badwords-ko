@@ -17,7 +17,7 @@ class Filter {
     this.options = {
       list: options.emptyList ? [] : [...badWords, ...(options.list || [])],
       exclude: options.exclude || [],
-      splitRegex: options.splitRegex || /\s/,
+      splitRegex: options.splitRegex || /(\s+)/,
       placeHolder: options.placeHolder || "*",
       regex: options.regex || /[^a-zA-Z0-9|$|@]|^/g,
       replaceRegex: options.replaceRegex || /\w/g,
@@ -58,8 +58,10 @@ class Filter {
 
     return string
       .split(splitRegex)
-      .map((word) => (this.isProfane(word) ? this.replaceWord(word) : word))
-      .join(" ");
+      .map((word) =>
+        this.isProfane(word.trim()) ? this.replaceWord(word) : word
+      )
+      .join("");
   }
 
   /**
